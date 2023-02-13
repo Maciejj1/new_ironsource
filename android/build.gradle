@@ -62,7 +62,7 @@ dependencies {
 //    implementation 'com.adcolony:sdk:4.2.4'
     // Add AdMob Network
     implementation 'com.google.android.gms:play-services-ads:21.0.0'
-    implementation 'com.ironsource.adapters:admobadapter:4.3.46'
+    implementation 'com.ironsource.adapters:admobadapter:4.3.29'
     // Add Amazon Network
 //    implementation 'com.ironsource.adapters:amazonadapter:4.3.3'
 //    implementation 'com.ironsource.adapters:amazonsdk:6.0.0@jar'
