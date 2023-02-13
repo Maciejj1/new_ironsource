@@ -1,4 +1,4 @@
-# new_flutter_ironsource_x_example
+# flutter_ironsource_x_example
 
 Demonstrates how to use the flutter_ironsource_x plugin.
 
