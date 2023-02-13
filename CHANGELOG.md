@@ -1,5 +1,3 @@
-## 1.1.0
-- working version
 ## 1.0.3
 - fixing and update
 ## 1.0.2

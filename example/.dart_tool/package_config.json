@@ -158,13 +158,13 @@
       "languageVersion": "2.14"
     },
     {
-      "name": "new_flutter_ironsource_x_example",
+      "name": "flutter_ironsource_x_example",
       "rootUri": "../",
       "packageUri": "lib/",
       "languageVersion": "2.17"
     }
   ],
-  "generated": "2023-02-13T16:37:16.808389Z",
+  "generated": "2023-02-13T12:13:17.421845Z",
   "generator": "pub",
   "generatorVersion": "2.18.5"
 }
