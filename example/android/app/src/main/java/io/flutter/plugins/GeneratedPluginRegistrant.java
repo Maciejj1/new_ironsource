@@ -16,9 +16,9 @@ public final class GeneratedPluginRegistrant {
   private static final String TAG = "GeneratedPluginRegistrant";
   public static void registerWith(@NonNull FlutterEngine flutterEngine) {
     try {
-      flutterEngine.getPlugins().add(new com.metamorfosis_labs.flutter_ironsource_x.FlutterIronsource_xPlugin());
+      flutterEngine.getPlugins().add(new com.itlight.new_flutter_ironsource_x.FlutterIronsource_xPlugin());
     } catch(Exception e) {
-      Log.e(TAG, "Error registering plugin flutter_ironsource_x, com.metamorfosis_labs.flutter_ironsource_x.FlutterIronsource_xPlugin", e);
+      Log.e(TAG, "Error registering plugin flutter_ironsource_x, com.itlight.new_flutter_ironsource_x.FlutterIronsource_xPlugin", e);
     }
   }
 }
