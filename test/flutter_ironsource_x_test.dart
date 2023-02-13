@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_ironsource_x/flutter_ironsource_x.dart';
+import 'package:new_flutter_ironsource_x/flutter_ironsource_x.dart';
 
 void main() {
   const MethodChannel channel = MethodChannel('flutter_ironsource_x');
