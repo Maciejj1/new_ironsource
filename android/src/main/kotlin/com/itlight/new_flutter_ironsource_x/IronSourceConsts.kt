@@ -1,7 +1,6 @@
-package com.metamorfosis_labs.flutter_ironsource_x
-
+package com.itlight.new_flutter_ironsource_x
 object IronSourceConsts {
-    const val MAIN_CHANNEL = "com.metamorfosis_labs.flutter_ironsource_x"
+    const val MAIN_CHANNEL = "com.itlight.new_flutter_ironsource_x"
     const val BANNER_AD_CHANNEL = "$MAIN_CHANNEL/bannerAd"
     const val INTERSTITIAL_CHANNEL = "$MAIN_CHANNEL/interstitialAd"
     const val INIT = "initialize"

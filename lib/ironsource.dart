@@ -7,7 +7,7 @@ export 'banner.dart';
 
 class IronSource {
   static const MethodChannel _channel =
-      MethodChannel("com.metamorfosis_labs.flutter_ironsource_x");
+      MethodChannel("com.itlight.new_flutter_ironsource_x");
   static IronSourceListener? _listener;
   static IronSourceListener? getListener() {
     return _listener!;

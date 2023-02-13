@@ -7,7 +7,7 @@ import 'dart:async';
 
 import 'package:flutter/services.dart';
 
-class FlutterIronsource_x {
+class NewFlutterIronsource_x {
   static const MethodChannel _channel = MethodChannel('flutter_ironsource_x');
 
   static Future<String?> get platformVersion async {

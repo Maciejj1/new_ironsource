@@ -1,7 +1,7 @@
 name: new_flutter_ironsource_x
 description: IronSource Ads & Mediation Plugin for Flutter
-version: 1.0.0
-homepage: https://github.com/dnaextrim/flutter_ironsource_x
+version: 1.0.1
+homepage: https://github.com/Maciejj1/new_ironsource
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
@@ -39,7 +39,7 @@ flutter:
       # https://flutter.dev/docs/development/packages-and-plugins/developing-packages#plugin-platforms
       # -------------------
       android:
-        package: com.metamorfosis_labs.flutter_ironsource_x
+        package: com.itlight.new_flutter_ironsource_x
         pluginClass: FlutterIronsource_xPlugin
     # -------------------
 

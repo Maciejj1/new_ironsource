@@ -1,4 +1,4 @@
-package com.metamorfosis_labs.flutter_ironsource_x
+package com.itlight.new_flutter_ironsource_x
 
 import android.app.Activity
 import android.os.Bundle

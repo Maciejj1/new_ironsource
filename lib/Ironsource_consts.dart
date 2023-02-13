@@ -1,4 +1,4 @@
-const String MAIN_CHANNEL = "com.metamorfosis_labs.flutter_ironsource_x";
+const String MAIN_CHANNEL = "com.itlight.new_flutter_ironsource_x";
 const String INTERSTITIAL_CHANNEL = MAIN_CHANNEL + "/interstitialAd";
 const String BANNER_AD_CHANNEL = MAIN_CHANNEL + "/bannerAd";
 //   Rewarded Video Listener Const

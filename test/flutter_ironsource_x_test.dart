@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:new_flutter_ironsource_x/flutter_ironsource_x.dart';
+import 'package:new_flutter_ironsource_x/new_flutter_ironsource_x.dart';
 
 void main() {
   const MethodChannel channel = MethodChannel('flutter_ironsource_x');
@@ -18,6 +18,6 @@ void main() {
   });
 
   test('getPlatformVersion', () async {
-    expect(await FlutterIronsource_x.platformVersion, '42');
+    expect(await NewFlutterIronsource_x.platformVersion, '42');
   });
 }

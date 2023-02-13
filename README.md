@@ -423,7 +423,7 @@ Add `xmlns:tools="http://schemas.android.com/tools"` on top for replace label.
 ```xml
   <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.metamorfosis_labs.flutter_ironsource_x_example">
+    package="com.itlight.new_flutter_ironsource_x_example">
 ```
 
 Add `tools:replace="android:label"` at the `<application>` tag
@@ -432,7 +432,7 @@ Add `tools:replace="android:label"` at the `<application>` tag
 <application
         tools:replace="android:label"
         android:name="io.flutter.app.FlutterApplication"
-        android:label="flutter_ironsource_x_example"
+        android:label="new_flutter_ironsource_x_example"
         android:networkSecurityConfig="@xml/network_security_config"
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
