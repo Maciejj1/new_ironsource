@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'package:new_flutter_ironsource_x/ironsource.dart';
-import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
