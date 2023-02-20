@@ -12,7 +12,6 @@ import com.ironsource.mediationsdk.integration.IntegrationHelper
 import com.ironsource.mediationsdk.logger.IronSourceError
 import com.ironsource.mediationsdk.model.Placement
 import com.ironsource.mediationsdk.sdk.*
-
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -287,13 +286,15 @@ class FlutterIronsource_xPlugin: FlutterPlugin, MethodCallHandler, ActivityAware
 
 
 
-   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+  override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     this.flutterPluginBinding = flutterPluginBinding
     this.mChannel = MethodChannel(flutterPluginBinding.binaryMessenger, IronSourceConsts.MAIN_CHANNEL)
     this.mChannel.setMethodCallHandler(this)
     Log.i("DEBUG","Tesst On Attached")
     val interstitialAdChannel = MethodChannel(flutterPluginBinding.binaryMessenger, IronSourceConsts.INTERSTITIAL_CHANNEL)
+//    binding.platformViewRegistry.registerViewFactory(IronSourceConsts.BANNER_AD_CHANNEL, IronSourceBanner(this.mActivity, binding.binaryMessenger))
   }
+
 
   override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
     this.mChannel.setMethodCallHandler(null)
@@ -301,71 +302,24 @@ class FlutterIronsource_xPlugin: FlutterPlugin, MethodCallHandler, ActivityAware
 
   override fun onAttachedToActivity(binding: ActivityPluginBinding) {
     this.mActivity = binding.activity;
-    IronSource.setConsent(true) // Set the user's consent to 'true' for personalized ads.
-    IronSource.init(this.mActivity, IronSourceConsts.APP_KEY, IronSource.AD_UNIT.INTERSTITIAL)
-    IronSource.setInterstitialListener(this)
-    IronSource.loadInterstitial() // Load the interstitial ad.
     Log.i("DEBUG", "Tesst On Activity")
     this.flutterPluginBinding.platformViewRegistry.registerViewFactory(IronSourceConsts.BANNER_AD_CHANNEL, IronSourceBanner(binding.activity, this.flutterPluginBinding.binaryMessenger))
+//    registrar.platformViewRegistry().registerViewFactory(IronSourceConsts.BANNER_AD_CHANNEL, IronSourceBanner(this.mActivity, binding.binaryMessenger))
   }
 
   override fun onDetachedFromActivityForConfigChanges() {
-    // Not required for IronSource SDK 7.2.7.
+    //TODO("Not yet implemented")
   }
 
   override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
-    // Not required for IronSource SDK 7.2.7.
+    //TODO("Not yet implemented")
   }
 
   override fun onDetachedFromActivity() {
-    // Not required for IronSource SDK 7.2.7.
+    //TODO("Not yet implemented")
   }
 
-  override fun onInterstitialAdReady() {
-    mActivity.runOnUiThread { // Back on the UI thread...
-      mChannel.invokeMethod(IronSourceConsts.ON_INTERSTITIAL_AD_READY, null)
-    }
-  }
-
-  override fun onInterstitialAdLoadFailed(ironSourceError: IronSourceError) {
-    mActivity.runOnUiThread {
-      val arguments = HashMap<String, Any>()
-      arguments["errorCode"] = ironSourceError.errorCode
-      arguments["errorMessage"] = ironSourceError.errorMessage
-      mChannel.invokeMethod(IronSourceConsts.ON_INTERSTITIAL_AD_LOAD_FAILED, arguments)
-    }
-  }
-
-  override fun onInterstitialAdOpened() {
-    mActivity.runOnUiThread {
-      mChannel.invokeMethod(IronSourceConsts.ON_INTERSTITIAL_AD_OPENED, null)
-    }
-  }
-
-  override fun onInterstitialAdClosed() {
-    mActivity.runOnUiThread {
-      mChannel.invokeMethod(IronSourceConsts.ON_INTERSTITIAL_AD_CLOSED, null)
-    }
-  }
-
-  override fun onInterstitialAdShowSucceeded() {
-    mActivity.runOnUiThread {
-      mChannel.invokeMethod(IronSourceConsts.ON_INTERSTITIAL_AD_SHOW_SUCCEEDED, null)
-    }
-  }
-
-  override fun onInterstitialAdShowFailed(ironSourceError: IronSourceError) {
-    mActivity.runOnUiThread {
-      val arguments = HashMap<String, Any>()
-      arguments["errorCode"] = ironSourceError.errorCode
-      arguments["errorMessage"] = ironSourceError.errorMessage
-      mChannel.invokeMethod(IronSourceConsts.ON_INTERSTITIAL_AD_SHOW_FAILED, arguments)
-    }
-  }
-
-  override fun onInterstitialAdClicked() {
-    mActivity.runOnUiThread {
-      mChannel.invokeMethod(IronSourceConsts.ON_INTERSTITIAL_AD_CLICKED, null)
-    }
+  override fun onImpressionSuccess(p0: ImpressionData?) {
+    //TODO("Not yet implemented")
   }
 }
