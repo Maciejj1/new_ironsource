@@ -24,7 +24,7 @@ import io.flutter.plugin.common.PluginRegistry
 import java.util.*
 
 /** FlutterIronsource_xPlugin */
-class FlutterIronsource_xPlugin: FlutterPlugin, MethodCallHandler, ActivityAware, InterstitialListener, RewardedVideoListener, OfferwallListener, ImpressionDataListener {
+class FlutterIronsource_xPlugin: FlutterPlugin, MethodCallHandler, ActivityAware, InterstitialAdListener, RewardedVideoListener, OfferwallListener, ImpressionDataListener {
   private lateinit var mActivity : Activity
   private lateinit var mChannel : MethodChannel
   private lateinit var messenger: BinaryMessenger
@@ -34,14 +34,6 @@ class FlutterIronsource_xPlugin: FlutterPlugin, MethodCallHandler, ActivityAware
   var APP_KEY = ""
   lateinit var mPlacement: Placement
   val FALLBACK_USER_ID = "userId"
-/*  var mActivity: Activity
-  var mChannel: MethodChannel*/
-
-  /*init {
-    this.mActivity = activity
-    this.mChannel = channel
-  }*/
-
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
     if (call.method == IronSourceConsts.INIT && call.hasArgument("appKey")) {
       call.argument<String>("")
@@ -93,7 +85,7 @@ class FlutterIronsource_xPlugin: FlutterPlugin, MethodCallHandler, ActivityAware
   }
 
   fun initialize(appKey: String, gdprConsent: Boolean, ccpaConsent: Boolean) {
-    IronSource.setInterstitialListener(this)
+    IronSource.setInterstitialAdListener(this)
     IronSource.setRewardedVideoListener(this)
     IronSource.setOfferwallListener(this)
     SupersonicConfig.getConfigObj().clientSideCallbacks = true
@@ -270,29 +262,13 @@ class FlutterIronsource_xPlugin: FlutterPlugin, MethodCallHandler, ActivityAware
   }
 
 
-  /*companion object {
-    @JvmStatic
-    fun registerWith(registrar: PluginRegistry.Registrar) {
-      val channel = MethodChannel(registrar.messenger(), IronSourceConsts.MAIN_CHANNEL)
-      channel.setMethodCallHandler(FlutterIronsource_xPlugin())
-      val interstitialAdChannel = MethodChannel(registrar.messenger(), IronSourceConsts.INTERSTITIAL_CHANNEL)
-      registrar.platformViewRegistry().registerViewFactory(IronSourceConsts.BANNER_AD_CHANNEL, IronSourceBanner(registrar.activity(), registrar.messenger()))
-  }*/
-
-  /*private companion object Factory {
-    fun setup(plugin: FlutterIronsource_xPlugin, binaryMessenger: BinaryMessenger) {
-    }
-  }*/
-
-
-
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     this.flutterPluginBinding = flutterPluginBinding
     this.mChannel = MethodChannel(flutterPluginBinding.binaryMessenger, IronSourceConsts.MAIN_CHANNEL)
     this.mChannel.setMethodCallHandler(this)
     Log.i("DEBUG","Tesst On Attached")
     val interstitialAdChannel = MethodChannel(flutterPluginBinding.binaryMessenger, IronSourceConsts.INTERSTITIAL_CHANNEL)
-//    binding.platformViewRegistry.registerViewFactory(IronSourceConsts.BANNER_AD_CHANNEL, IronSourceBanner(this.mActivity, binding.binaryMessenger))
+
   }
 
 
@@ -304,22 +280,21 @@ class FlutterIronsource_xPlugin: FlutterPlugin, MethodCallHandler, ActivityAware
     this.mActivity = binding.activity;
     Log.i("DEBUG", "Tesst On Activity")
     this.flutterPluginBinding.platformViewRegistry.registerViewFactory(IronSourceConsts.BANNER_AD_CHANNEL, IronSourceBanner(binding.activity, this.flutterPluginBinding.binaryMessenger))
-//    registrar.platformViewRegistry().registerViewFactory(IronSourceConsts.BANNER_AD_CHANNEL, IronSourceBanner(this.mActivity, binding.binaryMessenger))
   }
 
   override fun onDetachedFromActivityForConfigChanges() {
-    //TODO("Not yet implemented")
+   
   }
 
   override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
-    //TODO("Not yet implemented")
+    
   }
 
   override fun onDetachedFromActivity() {
-    //TODO("Not yet implemented")
+   
   }
 
   override fun onImpressionSuccess(p0: ImpressionData?) {
-    //TODO("Not yet implemented")
+   
   }
 }
