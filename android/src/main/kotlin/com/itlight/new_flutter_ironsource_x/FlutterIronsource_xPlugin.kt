@@ -34,19 +34,23 @@ class FlutterIronsource_xPlugin: FlutterPlugin, MethodCallHandler, ActivityAware
   var APP_KEY = ""
   lateinit var mPlacement: Placement
   val FALLBACK_USER_ID = "userId"
+/*  var mActivity: Activity
+  var mChannel: MethodChannel*/
+
+  /*init {
+    this.mActivity = activity
+    this.mChannel = channel
+  }*/
+
   override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
     if (call.method == IronSourceConsts.INIT && call.hasArgument("appKey")) {
-      call.argument<String>("appKey")?.let { appKey ->
-        initializeIronsourceSDK(
-          appKey,
-          call.argument<Boolean>("gdprConsent") ?: false,
-          call.argument<Boolean>("ccpaConsent") ?: false,
-          call.argument<Boolean>("debugMode") ?: false,
-        )
-        result.success(null)
-      } ?: run {
-        result.error("APP_KEY_NOT_PROVIDED", "App key not provided for IronSource SDK initialization", null)
-      }
+      call.argument<String>("")
+      initialize(
+        call.argument<String>("appKey")!!,
+        call.argument<Boolean>("gdprConsent")!!,
+        call.argument<Boolean>("ccpaConsent")!!
+      )
+      result.success(null)
     } else if (call.method == IronSourceConsts.LOAD_INTERSTITIAL) {
       IronSource.loadInterstitial()
       result.success(null)
@@ -82,179 +86,145 @@ class FlutterIronsource_xPlugin: FlutterPlugin, MethodCallHandler, ActivityAware
     } else if (call.method == "shouldTrackNetworkState" && call.hasArgument("state")) {
       call.argument<Boolean>("state")?.let { IronSource.shouldTrackNetworkState(mActivity, it) }
       result.success(null)
+
     } else {
       result.notImplemented()
     }
   }
-  
-  private fun initializeIronsourceSDK(
-    appKey: String,
-    gdprConsent: Boolean,
-    ccpaConsent: Boolean,
-    debugMode: Boolean
-  ) {
-    IronSource.setInterstitialListener(this)
-    IronSource.setRewardedVideoListener(this)
-    IronSource.setOfferwall
-
-
-
-
 
   fun initialize(appKey: String, gdprConsent: Boolean, ccpaConsent: Boolean) {
     IronSource.setInterstitialListener(this)
     IronSource.setRewardedVideoListener(this)
     IronSource.setOfferwallListener(this)
+    SupersonicConfig.getConfigObj().clientSideCallbacks = true
     IronSource.setConsent(gdprConsent)
-    IronSource.addImpressionDataListener(this)
+     IronSource.addImpressionDataListener(this)
+     if (ccpaConsent)
+      IronSource.setMetaData("do_not_sell", "false")
+    else
+      IronSource.setMetaData("do_not_sell", "true")
 
-    val config = IronSourceConfig()
-    config.clientSideCallbacks = true
-    IronSource.init(mActivity, appKey, IronSource.AD_UNIT.OFFERWALL, IronSource.AD_UNIT.INTERSTITIAL, IronSource.AD_UNIT.REWARDED_VIDEO, config)
-
-    if (ccpaConsent) {
-        val ccpaParams = HashMap<String, String>()
-        ccpaParams[IronSourceConstants.IRONSOURCE_CCPA_CONSENT_STRING] = "1"
-        IronSource.updateConsentInfo(ccpaParams)
-    } else {
-        val ccpaParams = HashMap<String, String>()
-        ccpaParams[IronSourceConstants.IRONSOURCE_CCPA_CONSENT_STRING] = "0"
-        IronSource.updateConsentInfo(ccpaParams)
-    }
-}
+     IronSource.init(mActivity, appKey, IronSource.AD_UNIT.OFFERWALL, IronSource.AD_UNIT.INTERSTITIAL, IronSource.AD_UNIT.REWARDED_VIDEO, IronSource.AD_UNIT.BANNER)
+//    IronSource.init(mActivity, appKey)
+  }
 
   // Interstitial Listener
-  override fun onInterstitialAdClicked(instanceId: String) {
+  override fun onInterstitialAdClicked() {
     mActivity.runOnUiThread { //back on UI thread...
-        mChannel.invokeMethod(IronSourceConsts.ON_INTERSTITIAL_AD_CLICKED, null)
+      mChannel.invokeMethod(IronSourceConsts.ON_INTERSTITIAL_AD_CLICKED, null)
     }
-}
+  }
 
-override fun onInterstitialAdReady(instanceId: String) {
+  override fun onInterstitialAdReady() {
     mActivity.runOnUiThread { //back on UI thread...
-        mChannel.invokeMethod(IronSourceConsts.ON_INTERSTITIAL_AD_READY, null)
+      mChannel.invokeMethod(IronSourceConsts.ON_INTERSTITIAL_AD_READY, null)
     }
-}
+  }
 
-override fun onInterstitialAdLoadFailed(instanceId: String, ironSourceError: IronSourceError) {
+  override fun onInterstitialAdLoadFailed(ironSourceError: IronSourceError) {
     mActivity.runOnUiThread { //back on UI thread...
-        val arguments = hashMapOf<String, Any>()
-        arguments["errorCode"] = ironSourceError.errorCode
-        arguments["errorMessage"] = ironSourceError.errorMessage
-        mChannel.invokeMethod(IronSourceConsts.ON_INTERSTITIAL_AD_LOAD_FAILED, arguments)
+      val arguments = HashMap<String, Any>()
+      arguments["errorCode"] = ironSourceError.errorCode
+      arguments["errorMessage"] = ironSourceError.errorMessage
+      mChannel.invokeMethod(IronSourceConsts.ON_INTERSTITIAL_AD_LOAD_FAILED, arguments)
     }
-}
+  }
 
-override fun onInterstitialAdOpened(instanceId: String) {
+  override fun onInterstitialAdOpened() {
     mActivity.runOnUiThread { //back on UI thread...
-        mChannel.invokeMethod(IronSourceConsts.ON_INTERSTITIAL_AD_OPENED, null)
+      mChannel.invokeMethod(IronSourceConsts.ON_INTERSTITIAL_AD_OPENED, null)
     }
-}
+  }
 
-override fun onInterstitialAdClosed(instanceId: String) {
+  override fun onInterstitialAdClosed() {
     mActivity.runOnUiThread { //back on UI thread...
-        mChannel.invokeMethod(IronSourceConsts.ON_INTERSTITIAL_AD_CLOSED, null)
+      mChannel.invokeMethod(IronSourceConsts.ON_INTERSTITIAL_AD_CLOSED, null)
     }
-}
+  }
 
-override fun onInterstitialAdShowSucceeded(instanceId: String) {
+  override fun onInterstitialAdShowSucceeded() {
     mActivity.runOnUiThread { //back on UI thread...
-        mChannel.invokeMethod(IronSourceConsts.ON_INTERSTITIAL_AD_SHOW_SUCCEEDED, null)
+      mChannel.invokeMethod(IronSourceConsts.ON_INTERSTITIAL_AD_SHOW_SUCCEEDED, null)
     }
-}
+  }
 
-override fun onInterstitialAdShowFailed(instanceId: String, ironSourceError: IronSourceError) {
+  override fun onInterstitialAdShowFailed(ironSourceError: IronSourceError) {
     mActivity.runOnUiThread { //back on UI thread...
-        val arguments = hashMapOf<String, Any>()
-        arguments["errorCode"] = ironSourceError.errorCode
-        arguments["errorMessage"] = ironSourceError.errorMessage
-        mChannel.invokeMethod(IronSourceConsts.ON_INTERSTITIAL_AD_SHOW_FAILED, arguments)
+      val arguments = HashMap<String, Any>()
+      arguments["errorCode"] = ironSourceError.errorCode
+      arguments["errorMessage"] = ironSourceError.errorMessage
+      mChannel.invokeMethod(IronSourceConsts.ON_INTERSTITIAL_AD_SHOW_FAILED, arguments)
     }
-}
-
+  }
 
   // --------- IronSource Rewarded Video Listener ---------
-override fun onRewardedVideoAdOpened(instanceId: String) {
+  override fun onRewardedVideoAdOpened() {
     // called when the video is opened
     mActivity.runOnUiThread { //back on UI thread...
-        val arguments = hashMapOf<String, Any>()
-        arguments["instanceId"] = instanceId
-        mChannel.invokeMethod(IronSourceConsts.ON_REWARDED_VIDEO_AD_OPENED, arguments)
+      mChannel.invokeMethod(IronSourceConsts.ON_REWARDED_VIDEO_AD_OPENED, null)
     }
-}
+  }
 
-override fun onRewardedVideoAdClosed(instanceId: String) {
+  override fun onRewardedVideoAdClosed() {
     mActivity.runOnUiThread { //back on UI thread...
-        val arguments = hashMapOf<String, Any>()
-        arguments["instanceId"] = instanceId
-        mChannel.invokeMethod(IronSourceConsts.ON_REWARDED_VIDEO_AD_CLOSED, arguments)
+      mChannel.invokeMethod(IronSourceConsts.ON_REWARDED_VIDEO_AD_CLOSED, null)
     }
-}
+  }
 
-override fun onRewardedVideoAvailabilityChanged(instanceId: String, available: Boolean) {
-    // called when the video availability has changed
+  override fun onRewardedVideoAvailabilityChanged(b: Boolean) {
+    // called when the video availbility has changed
     mActivity.runOnUiThread { //back on UI thread...
-        val arguments = hashMapOf<String, Any>()
-        arguments["instanceId"] = instanceId
-        arguments["available"] = available
-        mChannel.invokeMethod(IronSourceConsts.ON_REWARDED_VIDEO_AVAILABILITY_CHANGED, arguments)
+      mChannel.invokeMethod(IronSourceConsts.ON_REWARDED_VIDEO_AVAILABILITY_CHANGED, b)
     }
-}
+  }
 
-override fun onRewardedVideoAdStarted(instanceId: String) {
+  override fun onRewardedVideoAdStarted() {
     mActivity.runOnUiThread { //back on UI thread...
-        val arguments = hashMapOf<String, Any>()
-        arguments["instanceId"] = instanceId
-        mChannel.invokeMethod(IronSourceConsts.ON_REWARDED_VIDEO_AD_STARTED, arguments)
+      mChannel.invokeMethod(IronSourceConsts.ON_REWARDED_VIDEO_AD_STARTED, null)
     }
-}
+  }
 
-override fun onRewardedVideoAdEnded(instanceId: String) {
+  override fun onRewardedVideoAdEnded() {
     mActivity.runOnUiThread { //back on UI thread...
-        val arguments = hashMapOf<String, Any>()
-        arguments["instanceId"] = instanceId
-        mChannel.invokeMethod(IronSourceConsts.ON_REWARDED_VIDEO_AD_ENDED, arguments)
+      mChannel.invokeMethod(IronSourceConsts.ON_REWARDED_VIDEO_AD_ENDED, null)
     }
-}
+  }
 
-override fun onRewardedVideoAdRewarded(instanceId: String, placement: Placement) {
+  override fun onRewardedVideoAdRewarded(placement: Placement) {
     mActivity.runOnUiThread {
-        val arguments = hashMapOf<String, Any>()
-        arguments["instanceId"] = instanceId
-        arguments["placementId"] = placement.placementId
-        arguments["placementName"] = placement.placementName
-        arguments["rewardAmount"] = placement.rewardAmount
-        arguments["rewardName"] = placement.rewardName
-        mChannel.invokeMethod(IronSourceConsts.ON_REWARDED_VIDEO_AD_REWARDED, arguments)
+      val arguments = HashMap<String, Any>()
+      arguments["placementId"] = placement.placementId
+      arguments["placementName"] = placement.placementName
+      arguments["rewardAmount"] = placement.rewardAmount
+      arguments["rewardName"] = placement.rewardName
+      mChannel.invokeMethod(IronSourceConsts.ON_REWARDED_VIDEO_AD_REWARDED, arguments)
     }
-}
+  }
 
-override fun onRewardedVideoAdShowFailed(instanceId: String, ironSourceError: IronSourceError) {
+  override fun onRewardedVideoAdShowFailed(ironSourceError: IronSourceError) {
     mActivity.runOnUiThread {
-        val arguments = hashMapOf<String, Any>()
-        arguments["instanceId"] = instanceId
-        arguments["errorCode"] = ironSourceError.errorCode
-        arguments["errorMessage"] = ironSourceError.errorMessage
-        mChannel.invokeMethod(IronSourceConsts.ON_REWARDED_VIDEO_AD_SHOW_FAILED, arguments)
+      val arguments = HashMap<String, Any>()
+      arguments["errorCode"] = ironSourceError.errorCode
+      arguments["errorMessage"] = ironSourceError.errorMessage
+      mChannel.invokeMethod(IronSourceConsts.ON_REWARDED_VIDEO_AD_SHOW_FAILED, arguments)
     }
-}
+  }
 
-override fun onRewardedVideoAdClicked(instanceId: String, placement: Placement) {
+  override fun onRewardedVideoAdClicked(placement: Placement) {
     mActivity.runOnUiThread {
-        val arguments = hashMapOf<String, Any>()
-        arguments["instanceId"] = instanceId
-        arguments["placementId"] = placement.placementId
-        arguments["placementName"] = placement.placementName
-        arguments["rewardAmount"] = placement.rewardAmount
-        arguments["rewardName"] = placement.rewardName
-        mChannel.invokeMethod(IronSourceConsts.ON_REWARDED_VIDEO_AD_CLICKED, arguments)
+      val arguments = HashMap<String, Any>()
+      arguments["placementId"] = placement.placementId
+      arguments["placementName"] = placement.placementName
+      arguments["rewardAmount"] = placement.rewardAmount
+      arguments["rewardName"] = placement.rewardName
+      mChannel.invokeMethod(IronSourceConsts.ON_REWARDED_VIDEO_AD_CLICKED, arguments)
     }
-}
+  }
 
- // --------- IronSource Offerwall Listener ---------
-  override fun onOfferwallAvailable() {
+  // --------- IronSource Offerwall Listener ---------
+  override fun onOfferwallAvailable(available: Boolean) {
     mActivity.runOnUiThread { //back on UI thread...
-      mChannel.invokeMethod(IronSourceConsts.ON_OFFERWALL_AVAILABLE, null)
+      mChannel.invokeMethod(IronSourceConsts.ON_OFFERWALL_AVAILABLE, available)
     }
   }
 
@@ -264,87 +234,92 @@ override fun onRewardedVideoAdClicked(instanceId: String, placement: Placement) 
     }
   }
 
-  override fun onOfferwallShowFailed(error: IronSourceError) {
+  override fun onOfferwallShowFailed(ironSourceError: IronSourceError) {
     mActivity.runOnUiThread {
-      val arguments = hashMapOf<String, Any>(
-        "errorCode" to error.errorCode,
-        "errorMessage" to error.errorMessage
-      )
+      val arguments = HashMap<String, Any>()
+      arguments["errorCode"] = ironSourceError.errorCode
+      arguments["errorMessage"] = ironSourceError.errorMessage
       mChannel.invokeMethod(IronSourceConsts.ON_OFFERWALL_SHOW_FAILED, arguments)
     }
   }
 
   override fun onOfferwallAdCredited(credits: Int, totalCredits: Int, totalCreditsFlag: Boolean): Boolean {
     mActivity.runOnUiThread {
-      val arguments = hashMapOf<String, Any>(
-        "credits" to credits,
-        "totalCredits" to totalCredits,
-        "totalCreditsFlag" to totalCreditsFlag
-      )
+      val arguments = HashMap<String, Any>()
+      arguments["credits"] = credits
+      arguments["totalCredits"] = totalCredits
+      arguments["totalCreditsFlag"] = totalCreditsFlag
       mChannel.invokeMethod(IronSourceConsts.ON_OFFERWALL_AD_CREDITED, arguments)
     }
     return false
   }
 
-  override fun onOfferwallClosed() {
-    mActivity.runOnUiThread { //back on UI thread...
-      mChannel.invokeMethod(IronSourceConsts.ON_OFFERWALL_CLOSED, null)
-    }
-  }
-
-  override fun onOfferwallAvailable(available: Boolean) {
-    mActivity.runOnUiThread { //back on UI thread...
-      mChannel.invokeMethod(IronSourceConsts.ON_OFFERWALL_AVAILABLE, available)
-    }
-  }
-
-  override fun onOfferwallOpened(placement: Placement?) {
-    mActivity.runOnUiThread { //back on UI thread...
-      mChannel.invokeMethod(IronSourceConsts.ON_OFFERWALL_OPENED, null)
-    }
-  }
-
-  override fun onOfferwallClosed() {
-    mActivity.runOnUiThread { //back on UI thread...
-      mChannel.invokeMethod(IronSourceConsts.ON_OFFERWALL_CLOSED, null)
-    }
-  }
-
-  override fun onOfferwallShowFailed(placement: Placement?, error: IronSourceError?) {
+  override fun onGetOfferwallCreditsFailed(ironSourceError: IronSourceError) {
     mActivity.runOnUiThread {
-      val arguments = hashMapOf<String, Any>(
-        "errorCode" to error?.errorCode,
-        "errorMessage" to error?.errorMessage
-      )
-      mChannel.invokeMethod(IronSourceConsts.ON_OFFERWALL_SHOW_FAILED, arguments)
-    }
-  }
-
-  override fun onOfferwallAdCredited(credits: Int, totalCredits: Int, totalCreditsFlag: Boolean, activity: Activity?): Boolean {
-    mActivity.runOnUiThread {
-      val arguments = hashMapOf<String, Any>(
-        "credits" to credits,
-        "totalCredits" to totalCredits,
-        "totalCreditsFlag" to totalCreditsFlag
-      )
-      mChannel.invokeMethod(IronSourceConsts.ON_OFFERWALL_AD_CREDITED, arguments)
-    }
-    return false
-  }
-
-  override fun onGetOfferwallCreditsFailed(error: IronSourceError?) {
-    mActivity.runOnUiThread {
-      val arguments = hashMapOf<String, Any>(
-        "errorCode" to error?.errorCode,
-        "errorMessage" to error?.errorMessage
-      )
+      val arguments = HashMap<String, Any>()
+      arguments["errorCode"] = ironSourceError.errorCode
+      arguments["errorMessage"] = ironSourceError.errorMessage
       mChannel.invokeMethod(IronSourceConsts.ON_OFFERWALL_CREDITS_FAILED, arguments)
     }
   }
 
-  // override fun onOfferwallAvailable(placement: Placement?) {
-  //   mActivity.runOnUiThread { //back on UI thread...
-  //     mChannel
-  //   }
-  // }
+  override fun onOfferwallClosed() {
+    mActivity.runOnUiThread { //back on UI thread...
+      mChannel.invokeMethod(IronSourceConsts.ON_OFFERWALL_CLOSED, null)
+    }
+  }
+
+
+  /*companion object {
+    @JvmStatic
+    fun registerWith(registrar: PluginRegistry.Registrar) {
+      val channel = MethodChannel(registrar.messenger(), IronSourceConsts.MAIN_CHANNEL)
+      channel.setMethodCallHandler(FlutterIronsource_xPlugin())
+      val interstitialAdChannel = MethodChannel(registrar.messenger(), IronSourceConsts.INTERSTITIAL_CHANNEL)
+      registrar.platformViewRegistry().registerViewFactory(IronSourceConsts.BANNER_AD_CHANNEL, IronSourceBanner(registrar.activity(), registrar.messenger()))
+  }*/
+
+  /*private companion object Factory {
+    fun setup(plugin: FlutterIronsource_xPlugin, binaryMessenger: BinaryMessenger) {
+    }
+  }*/
+
+
+
+  override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
+    this.flutterPluginBinding = flutterPluginBinding
+    this.mChannel = MethodChannel(flutterPluginBinding.binaryMessenger, IronSourceConsts.MAIN_CHANNEL)
+    this.mChannel.setMethodCallHandler(this)
+    Log.i("DEBUG","Tesst On Attached")
+    val interstitialAdChannel = MethodChannel(flutterPluginBinding.binaryMessenger, IronSourceConsts.INTERSTITIAL_CHANNEL)
+//    binding.platformViewRegistry.registerViewFactory(IronSourceConsts.BANNER_AD_CHANNEL, IronSourceBanner(this.mActivity, binding.binaryMessenger))
+  }
+
+
+  override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
+    this.mChannel.setMethodCallHandler(null)
+  }
+
+  override fun onAttachedToActivity(binding: ActivityPluginBinding) {
+    this.mActivity = binding.activity;
+    Log.i("DEBUG", "Tesst On Activity")
+    this.flutterPluginBinding.platformViewRegistry.registerViewFactory(IronSourceConsts.BANNER_AD_CHANNEL, IronSourceBanner(binding.activity, this.flutterPluginBinding.binaryMessenger))
+//    registrar.platformViewRegistry().registerViewFactory(IronSourceConsts.BANNER_AD_CHANNEL, IronSourceBanner(this.mActivity, binding.binaryMessenger))
+  }
+
+  override fun onDetachedFromActivityForConfigChanges() {
+    //TODO("Not yet implemented")
+  }
+
+  override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
+    //TODO("Not yet implemented")
+  }
+
+  override fun onDetachedFromActivity() {
+    //TODO("Not yet implemented")
+  }
+
+  override fun onImpressionSuccess(p0: ImpressionData?) {
+    //TODO("Not yet implemented")
+  }
 }
