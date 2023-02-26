@@ -22,10 +22,9 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry
 import java.util.*
-import com.ironsource.mediationsdk.sdk.InterstitialListener
 
 /** FlutterIronsource_xPlugin */
-class FlutterIronsource_xPlugin: FlutterPlugin, MethodCallHandler, ActivityAware, InterstitialListener, RewardedVideoListener, OfferwallListener, ImpressionDataListener {
+class FlutterIronsource_xPlugin: FlutterPlugin, MethodCallHandler, ActivityAware, RewardedVideoListener, OfferwallListener, ImpressionDataListener {
   private lateinit var mActivity : Activity
   private lateinit var mChannel : MethodChannel
   private lateinit var messenger: BinaryMessenger
@@ -94,7 +93,7 @@ class FlutterIronsource_xPlugin: FlutterPlugin, MethodCallHandler, ActivityAware
   }
 
   fun initialize(appKey: String, gdprConsent: Boolean, ccpaConsent: Boolean) {
-    IronSource.setInterstitialListener(this)
+    // IronSource.setInterstitialListener(this)
     IronSource.setRewardedVideoListener(this)
     IronSource.setOfferwallListener(this)
     SupersonicConfig.getConfigObj().clientSideCallbacks = true

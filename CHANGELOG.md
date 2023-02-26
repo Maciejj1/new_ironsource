@@ -1,3 +1,5 @@
+## 1.2.0+2
+- try fix InterstitialListener
 ## 1.2.0+1
 - try fix InterstitialListener
 ## 1.2.0
