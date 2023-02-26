@@ -1,3 +1,5 @@
+## 1.2.0
+- fixing and update
 ## 1.1.9
 - fixing and update
 ## 1.1.8
