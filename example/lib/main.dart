@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:new_flutter_ironsource_x/banner.dart';
+import 'package:flutter_ironsource_x_example/providers/banner_providers.dart';
+import 'package:flutter_ironsource_x_example/widgets/banner_widget.dart';
+import 'package:flutter_ironsource_x_example/widgets/button_ads.dart';
 import 'package:provider/provider.dart';
-
-import 'package:new_flutter_ironsource_x/ironsource.dart';
 
 void main() {
   runApp(const MyApp());
